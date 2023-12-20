@@ -5,15 +5,28 @@ const { Text } = Typography;
 const LeftForm = (props) => {
     const [form] = Form.useForm();
     const onFinish = (values) => {
-        const n_recipe = {
+        fetch('/api/recipes', {
+            method: 'POST',
+            body: JSON.stringify({
+                title: values.title,
+                directions: values.directions,
+                ingredients: values.ingredients
+            }),
+            headers: { 'Content-Type': 'application/json' },
+        }).then(() => {
+            const n_recipe = {
+                // eslint-disable-next-line react/prop-types
+                id: props.len(),
+                title: values.title,
+                directions: values.directions,
+                ingredients: values.ingredients
+            }
             // eslint-disable-next-line react/prop-types
-            id: props.len(),
-            title: values.title,
-            directions: values.directions,
-            ingredients: values.ingredients
-        }
-        props.updateRecipe(n_recipe)
-        form.resetFields();
+            props.updateRecipe(n_recipe)
+            form.resetFields();
+        }).catch(() => {
+            alert('Has Error While Create try please again')
+        })
     };
     return (
         <Form form={form} style={{ backgroundColor: 'white' }} onFinish={onFinish}>
